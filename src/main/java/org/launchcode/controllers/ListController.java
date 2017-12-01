@@ -16,8 +16,10 @@ import java.util.HashMap;
 @RequestMapping(value = "list")
 public class ListController {
 
+    //instantiating new HashMap - columnChoices
     static HashMap<String, String> columnChoices = new HashMap<>();
 
+    //add list of search and list choices to columnChoices
     public ListController () {
         columnChoices.put("core competency", "Skill");
         columnChoices.put("employer", "Employer");
@@ -25,7 +27,7 @@ public class ListController {
         columnChoices.put("position type", "Position Type");
         columnChoices.put("all", "All");
     }
-
+    //handler named list that returns a list of columnChoices
     @RequestMapping(value = "")
     public String list(Model model) {
 
@@ -34,13 +36,23 @@ public class ListController {
         return "list";
     }
 
+    //handler named listColumnValues that uses the column value as a query param to
+    //determine which values are pulled from JobData
     @RequestMapping(value = "values")
-    public String listColumnValues(Model model, @RequestParam String column) {
 
+    //model.addAttribute passes data into the view (templates) from the controller
+
+    //@RequestParam gets data out of the request (i.e. column)
+    //spring will look for "column" parameter
+    public String listColumnValues(Model model, @RequestParam String column) {
+        //if the user clicks on "all", call the findAll method from JobData...an ArrayList of HashMap
+        //add and pass
         if (column.equals("all")) {
-            ArrayList<HashMap<String, String>> jobs = JobData.findAll();
+            ArrayList<HashMap<String, String>> Jobs = JobData.findAll();
+            int itemCount = Jobs.size();
             model.addAttribute("title", "All Jobs");
-            model.addAttribute("jobs", jobs);
+            model.addAttribute("itemCount",itemCount + " Result(s)");
+            model.addAttribute("Jobs", Jobs);
             return "list-jobs";
         } else {
             ArrayList<String> items = JobData.findAll(column);
@@ -51,14 +63,18 @@ public class ListController {
         }
 
     }
-
+    //handler takes in two query param, column and value, this displays the information when a user
+    //clicks on a link...e.g. Location is Saint Louis, user clicks on Saint Louis to see the jobs
+    //in Saint Louis
     @RequestMapping(value = "jobs")
     public String listJobsByColumnAndValue(Model model,
             @RequestParam String column, @RequestParam String value) {
 
-        ArrayList<HashMap<String, String>> jobs = JobData.findByColumnAndValue(column, value);
+        ArrayList<HashMap<String, String>> Jobs = JobData.findByColumnAndValue(column, value);
+        int itemCount = Jobs.size();
         model.addAttribute("title", "Jobs with " + columnChoices.get(column) + ": " + value);
-        model.addAttribute("jobs", jobs);
+        model.addAttribute("itemCount",itemCount + " Result(s)");
+        model.addAttribute("Jobs", Jobs);
 
         return "list-jobs";
     }

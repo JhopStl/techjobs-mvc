@@ -35,8 +35,10 @@
     </form>
 
     <hr />
+    <h3 th:text="${itemCount}"></h3>
 
-    <!-- TODO #2 - Loop over jobs map to display all job fields -->
+
+    <table th:replace="fragments :: list-jobs"></table>
 
 </div>
 

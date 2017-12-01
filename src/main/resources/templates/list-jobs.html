@@ -10,6 +10,12 @@
 
     <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
 
+    <hr />
+    <h3 th:text="${itemCount}"></h3>
+
+    <table th:replace="fragments :: list-jobs"></table>
+
+
     <!-- TODO #3 - Use the same list display from search.html -->
 
 </div>
